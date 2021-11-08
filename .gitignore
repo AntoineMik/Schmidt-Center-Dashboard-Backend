@@ -1,25 +1,35 @@
-# CakePHP 3
+# -------------------------------------------------
+.env
 
-/vendor/*
-/config/app.php
+# -------------------------------------------------
+# Misc CSS Caching
+# -------------------------------------------------
+.sass-cache/
+*.css.map
 
-/tmp/cache/models/*
-!/tmp/cache/models/empty
-/tmp/cache/persistent/*
-!/tmp/cache/persistent/empty
-/tmp/cache/views/*
-!/tmp/cache/views/empty
-/tmp/sessions/*
-!/tmp/sessions/empty
-/tmp/tests/*
-!/tmp/tests/empty
+# -------------------------------------------------
+# OS generated files
+# -------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-/logs/*
-!/logs/empty
+# -------------------------------------------------
+# Logs and databases
+# -------------------------------------------------
+logs
+*.log
+npm-debug.log
 
-# CakePHP 2
-
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
+# -------------------------------------------------
+# Dependency directories
+# Commenting this out is preferred by some people, see
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
+# -------------------------------------------------
+bower_components
+node_modules
+**/*/node_modules
