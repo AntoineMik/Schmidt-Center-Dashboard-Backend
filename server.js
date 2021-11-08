@@ -26,6 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Get and POST requests
 app.route('/api')
     // Get requests
   .get(async (req, res) => {

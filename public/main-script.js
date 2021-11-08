@@ -50,9 +50,16 @@ async function mainThread()
 
     const sensorData = JSON.parse(rawdata.getItem("results"));
 
-    sensorData.forEach(ID => {
+    /*sensorData.forEach(ID => {
         console.log(ID)
-    })
+    })*/
+
+    var list = document.getElementById("dynamic-list");
+    var li = document.createElement("li");
+
+    list.appendChild(sensorData);
+
+
 
     
 }
