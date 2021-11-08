@@ -40,7 +40,7 @@ app.route('/api')
     const data = await fetch(`https://www.purpleair.com/json?show=${formattedSensorIds}`);
     // Parse as Json
     const json = await data.json();
-    console.log('data from fetch Succeded');
+    console.log('data from fetch Succeded:', json);
     res.json(json);
   })
   .post(async (req, res) => {
