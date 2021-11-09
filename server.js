@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 app.route('/api')
     // GET requests
   .get(async (req, res) => {
-    console.log('GET request detected');
+    console.log('GET request detected for Sensor Data');
 
     // Format the sensor list to match purple air call for multiple entries.
     // More info here: https://docs.google.com/document/d/15ijz94dXJ-YAZLi9iZ_RaBwrZ4KtYeCy08goGBwnbCU/edit
@@ -52,6 +52,11 @@ app.route('/api')
     console.log('data from fetch', json);
     res.json(json);
   });
+
+app.route('/weather')
+.get(async (req, res) => {
+    console.log('GET request detected for Weather');
+})
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}!`);
