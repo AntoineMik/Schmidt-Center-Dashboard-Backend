@@ -1,28 +1,51 @@
 // Lists of sensors IDs
 const sensorIDs = [102898, 104786, 2221, 8244, 8248];
+// Holds processed sensor data
 const sensorsData = [];
+// Holds raw sensor data
 const rawdata = [];
 
 // Process raw data from server. Here we can decide what entries from the sensors matters
 function processServerData(jsonFromServer)
 {
-    const results = jsonFromServer.results;
-    if(results !== undefined)
+    if(jsonFromServer.code)
     {
-        let stats = JSON.parse(results['Stats']);
-        console.log(results['ID'], results['Label'], results['pm2_5_atm'], stats['v5']);
-        sensorsData.push({
-            ID: results['ID'],
-            pm2_5_current: parseFloat(reading['pm2_5_atm']),
-            pm2_5_24h_average: stats['v5'],
-            Label: reading['Label'],
+        if(jsonFromServer.code !== 200)
+        {
+            throw new Error(jsonFromServer.message);
+        }
+    }
 
-        })
-    }
-    else 
-    {
-        console.log('could not find sensor data for ID')
-    }
+    // Saves the raw sensor data
+    rawdata.push(jsonFromServer.results);
+
+    // Process each sensor data
+    sensorIDs.forEach((sensorID) => {
+        const results = jsonFromServer.results.find(read => read.ID === sensorID)
+        if(results !== undefined)
+        {
+            let stats = JSON.parse(results['Stats'])
+            sensorsData.push({
+                ID: sensorID,
+                pm2_5_current: parseFloat(results['pm2_5_atm']),
+                pm2_5_24h_average: stats['v5'],
+                Label: results['Label'],
+                Latitude: results['Lat'],
+                Longitude: results['Lon'],
+                AQI: parseFloat(stats['v5'])
+    
+            })
+        }
+        else
+        {
+            console.log('could not find sensor data for ID', sensorID)
+        }
+    })
+
+    const div = document.createElement('div');
+    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(sensorsData)}<br /><br />`;
+    $('body').append(div);
+
 }
 
 // Load the raw data from the server
@@ -36,48 +59,14 @@ async function loadData()
     
     })
       .then((fromServer) => fromServer.json())
-      .then((jsonFromServer) => processServerData(jsonFromServer))
+      .then((jsonFromServer) => {
+          processServerData(jsonFromServer);
+        })
       .catch((err) => {
         console.log(err);
     });
 }
 
 
-
-
-window.onload = loadData;
-/*
-async function getDatafromserver()
-{
-
-        fetch('/api', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-          .then((fromServer) => fromServer.json())
-          .then((jsonFromServer) => rawdata.push(jsonFromServer))
-          .catch((err) => {
-            console.log(err);
-          });
-}
-
-async function mainThread()
-{
-    console.log('Firing main thread');
-    //const rawData = await loadData();
-    await getDatafromserver();
-
-    const sensorData = JSON.parse(rawdata.getItem("results"));
-
-    sensorData.forEach(ID => {
-        console.log(ID)
-    })
-
-    var list = document.getElementById("dynamic-list");
-    var li = document.createElement("li");
-
-    list.appendChild(sensorData);  
-}
-*/
+// Get data on window load.
+window.onload = loadData

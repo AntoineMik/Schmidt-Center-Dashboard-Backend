@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 // Get and POST requests
 app.route('/api')
-    // Get requests
+    // GET requests
   .get(async (req, res) => {
     console.log('GET request detected');
 
@@ -54,5 +54,5 @@ app.route('/api')
   });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`Server listening on port ${port}!`);
 });
