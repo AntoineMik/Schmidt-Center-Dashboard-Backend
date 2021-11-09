@@ -1,7 +1,8 @@
 // This is a fork from https://github.com/dqgorelick/smc-breathe-well-dashboard
 
 // Air quality Index from 
-function aqiFromPM(pm) {
+export function aqiFromPM(pm) 
+{
     if (isNaN(pm)) return "-";
     if (pm == undefined) return "-";
     if (pm < 0) return pm;
@@ -32,10 +33,11 @@ function aqiFromPM(pm) {
     } else {
       return undefined;
     }
-  }
+}
   
-  // per 1 hour average
-  function aqiFromOzone(ozone) {
+// per 1 hour average
+function aqiFromOzone(ozone) 
+{
     if (isNaN(ozone)) return "-";
     if (ozone == undefined) return "-";
     if (ozone < 0) return ozone;
@@ -63,9 +65,10 @@ function aqiFromPM(pm) {
     } else {
       return undefined;
     }
-  }
+}
   
-  function bplFromPM(pm) {
+function bplFromPM(pm) 
+{
     if (isNaN(pm)) return 0;
     if (pm == undefined) return 0;
     if (pm < 0) return 0;
@@ -96,8 +99,10 @@ function aqiFromPM(pm) {
       return 0;
     }
   
-  }
-  function bphFromPM(pm) {
+}
+  
+function bphFromPM(pm) 
+{
     //return 0;
     if (isNaN(pm)) return 0;
     if (pm == undefined) return 0;
@@ -129,17 +134,19 @@ function aqiFromPM(pm) {
       return 0;
     }
   
-  }
+}
   
-  function calcAQI(Cp, Ih, Il, BPh, BPl) {
+function calcAQI(Cp, Ih, Il, BPh, BPl) 
+{
     var a = (Ih - Il);
     var b = (BPh - BPl);
     var c = (Cp - BPl);
     return Math.round((a / b) * c + Il);
-  }
+}
   
   
-  function getAQIDescription(aqi) {
+function getAQIDescription(aqi) 
+{
     if (aqi >= 401) {
       return 'Hazardous';
     } else if (aqi >= 301) {
@@ -157,9 +164,11 @@ function aqiFromPM(pm) {
     } else {
       return undefined;
     }
-  }
+}
   
-  function getAQIMessage(aqi) {
+  
+function getAQIMessage(aqi) 
+{
     if (aqi >= 401) {
       return '>401: Health alert: everyone may experience more serious health effects';
     } else if (aqi >= 301) {
@@ -177,9 +186,9 @@ function aqiFromPM(pm) {
     } else {
       return undefined;
     }
-  }
+}
   
-  module.exports = {
+module.exports = {
     aqiFromPM,
     getAQIDescription,
     getAQIMessage

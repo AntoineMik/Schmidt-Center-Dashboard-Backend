@@ -1,3 +1,4 @@
+//const calculateAQI = require('./AQIcalculator');
 // Lists of sensors IDs
 const sensorIDs = [102898, 104786, 2221, 8244, 8248];
 // Holds processed sensor data
@@ -5,9 +6,14 @@ const sensorsData = [];
 // Holds raw sensor data
 const rawdata = [];
 
+function dummy(v){
+return v;
+}
+
 // Process raw data from server. Here we can decide what entries from the sensors matters
 function processServerData(jsonFromServer)
 {
+
     if(jsonFromServer.code)
     {
         if(jsonFromServer.code !== 200)
