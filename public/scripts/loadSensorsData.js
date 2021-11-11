@@ -1,20 +1,21 @@
-//import {getSensorIDs} from "./listOfSensorsIDs.js";
-//const calculateAQI = require('./AQIcalculator');
+/* Load sensors data from the server and process it.
+ */
 
-//import { getSensorIDs } from "./listOfSensorsIDs";
+import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
+import { getSensorIDs } from "./listOfSensorsIDs.js";
 
-// Lists of sensors IDs
-const sensorIDs = [102898, 104786, 102830, 102890, 2221, 8244, 8248];
-// Holds processed sensor data
 const sensorsData = [];
-// Holds raw sensor data
-const rawdata = [];
-
+var rawdata = {};
 
 // Process raw data from server. Here we can decide what entries from the sensors matters
-function processServerData(jsonFromServer)
+function processSensorsData(jsonFromServer)
 {
+    const sensorIDs = getSensorIDs();
 
+    // Save raw data for when needed
+    rawdata = JSON.parse(JSON.stringify(jsonFromServer));
+
+    // Check for proper response fron the API call
     if(jsonFromServer.code)
     {
         if(jsonFromServer.code !== 200)
@@ -23,15 +24,13 @@ function processServerData(jsonFromServer)
         }
     }
 
-    // Saves the raw sensor data
-    rawdata.push(jsonFromServer.results);
-
-    // Process each sensor data
+    // Process each sensor data to include relevant information
     sensorIDs.forEach((sensorID) => {
         const results = jsonFromServer.results.find(read => read.ID === sensorID)
         if(results !== undefined)
         {
             let stats = JSON.parse(results['Stats'])
+            let calculatedAQI = aqiFromPM(parseFloat(stats['v5']))
             sensorsData.push({
                 ID: sensorID,
                 pm2_5_current: parseFloat(results['pm2_5_atm']),
@@ -39,7 +38,9 @@ function processServerData(jsonFromServer)
                 Label: results['Label'],
                 Latitude: results['Lat'],
                 Longitude: results['Lon'],
-                AQI: parseFloat(stats['v5'])
+                AQI: calculatedAQI,
+                AQIDescription: getAQIDescription(calculatedAQI),
+                AQIMessage: getAQIMessage(calculatedAQI) 
     
             })
         }
@@ -49,11 +50,8 @@ function processServerData(jsonFromServer)
         }
     })
 
-    const div = document.createElement('div');
-    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(sensorsData)}<br /><br />`;
-    $('body').append(div);
-
 }
+
 
 // Load the raw data from the server
 async function loadData()
@@ -67,13 +65,23 @@ async function loadData()
     })
       .then((fromServer) => fromServer.json())
       .then((jsonFromServer) => {
-          processServerData(jsonFromServer);
+          console.log(jsonFromServer);
+          processSensorsData(jsonFromServer);
         })
       .catch((err) => {
         console.log(err);
     });
 }
 
+await loadData();
 
-// Get data on window load.
-window.onload = loadData
+export function getRawSensorsData()
+{
+    return rawdata;
+}
+
+export function getProcessedSensorData()
+{
+  console.log(sensorsData);
+  return sensorsData;
+}

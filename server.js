@@ -7,6 +7,9 @@ import fetch from 'node-fetch';
 
 dotenv.config();
 
+// import sensor list from file
+import { getSensorIDs } from "./public/scripts/listOfSensorsIDs.js";
+
 /* Using fetch. Not cmpatible with internet explorer
 More here: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch*/
 
@@ -14,7 +17,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Lists of sensors IDs
-const sensorIDs = [102898, 104786, 2221, 8244, 8248, 102830, 102890];
+const sensorIDs = getSensorIDs(); // [102898, 104786, 2221, 8244, 8248, 102830, 102890];
 // Sensor: PGCPS_Schmidt_Orme ID 104786 currently offline
 
 app.use(express.urlencoded({ extended: true }));

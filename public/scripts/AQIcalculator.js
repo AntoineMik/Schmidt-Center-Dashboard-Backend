@@ -1,6 +1,27 @@
-// This is a fork from https://github.com/dqgorelick/smc-breathe-well-dashboard
+/*
+The AQI is calculated using the EPA’s breakpoints as described in this 
+link: https://aqs.epa.gov/aqsweb/documents/codetables/aqi_breakpoints.html
 
-// Air quality Index from 
+The Code bellow is provided by Purple Air 
+here: https://docs.google.com/document/d/15ijz94dXJ-YAZLi9iZ_RaBwrZ4KtYeCy08goGBwnbCU/edit#
+
+For more information regarding Air Quality Index (AQI),
+Visit: https://www.airnow.gov/aqi/aqi-basics/using-air-quality-index/
+For Technical information, 
+Visit: https://www.airnow.gov/publications/air-quality-index/technical-assistance-document-for-reporting-the-daily-aqi/
+
+The following calculation reflect the standard AQI calculation provided by the Environmental Protection Agency (EPA)
+
+This document converts PM2.5ug/m3 to AQI using the functions below:
+ 
+var AQI = aqiFromPM(pm25value);
+var AQIDescription = getAQIDescription(AQI); //A short description of the provided AQI
+var AQIMessage = getAQIMessage(AQI); // What the provided AQI means (a longer description)
+
+*/
+
+
+// Air quality Index from PM2.5 Measurements
 export function aqiFromPM(pm) 
 {
     if (isNaN(pm)) return "-";
@@ -34,8 +55,8 @@ export function aqiFromPM(pm)
       return undefined;
     }
 }
-  
-// per 1 hour average
+
+// Calculates AQI from ozone measurements
 function aqiFromOzone(ozone) 
 {
     if (isNaN(ozone)) return "-";
@@ -145,7 +166,7 @@ function calcAQI(Cp, Ih, Il, BPh, BPl)
 }
   
   
-function getAQIDescription(aqi) 
+export function getAQIDescription(aqi) 
 {
     if (aqi >= 401) {
       return 'Hazardous';
@@ -167,7 +188,7 @@ function getAQIDescription(aqi)
 }
   
   
-function getAQIMessage(aqi) 
+export function getAQIMessage(aqi) 
 {
     if (aqi >= 401) {
       return '>401: Health alert: everyone may experience more serious health effects';
@@ -187,9 +208,3 @@ function getAQIMessage(aqi)
       return undefined;
     }
 }
-  
-module.exports = {
-    aqiFromPM,
-    getAQIDescription,
-    getAQIMessage
-  }
