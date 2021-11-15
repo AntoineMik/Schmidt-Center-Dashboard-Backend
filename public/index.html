@@ -6,25 +6,64 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  
-    
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">   
     
 </head>
   <body>
-
-    <div class='module-wrapper'>
-        <div>
-          <h2>Purple Air Sensors Live View</h2>
-          <p>Note: Map includes all community connected sensors in Prince George's county Area. <a href="https://www.purpleair.com/map?opt=1/mAQI/a10/cC0#10.41/38.1976/-76.4581" target="_blank">View map in fullscreen</a>.</p>
-          <div class='map-wrapper'>
-            <iframe width="100%" height="600px" frameBorder="0"
-              src="https://map.purpleair.com/1/mAQI/a10/p604800/cC0#9.68/38.836/-76.878"></iframe>
+    <div class="columns">
+      <div class="column is-four-fifths">
+        <div class="field has-addons pt-4">
+          <div class="control">
+            <input class="input" size="37" type="text" placeholder="Search Schools">
+          </div>
+          <div class="control">
+            <button class="button is-success" type="submit">
+              Search
+            </button>
           </div>
         </div>
+        <div class='map-wrapper'>
+          <iframe width="100%" height="600px" frameBorder="0"
+            src="https://map.purpleair.com/1/mAQI/a10/p604800/cC0#9.68/38.836/-76.878"></iframe>
+        </div>
+      </div>
+      <div class="column">
+        <h3 class="title is-3 pt-6" style="margin-top: 10px;">County AQI:</h3>   
+        <div class="card mr-6 mt-6">
+          <header class="card-header">
+            <p class="card-header-title">
+              Regions
+            </p>
+            <button class="card-header-icon" aria-label="more options">
+              <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              <input type="checkbox">
+              North County 
+              <br> 
+              <input type="checkbox">
+              Central County 
+              <br> 
+              <input type="checkbox">
+              Rural Tier
+              <br>
+              <input type="checkbox">
+              Inner Beltway
+              <br>
+              <input type="checkbox">
+              South County  
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
+    
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
