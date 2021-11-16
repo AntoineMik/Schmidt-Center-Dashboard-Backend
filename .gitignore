@@ -33,3 +33,7 @@ npm-debug.log
 bower_components
 node_modules
 **/*/node_modules
+
+# --------------------
+dummie.js
+scripts/precessSensorsData.js
