@@ -25,6 +25,7 @@ function processSensorsData(jsonFromServer)
     }
 
     // Process each sensor data to include relevant information
+    // Primary and secondary ID and Channel ID are for accessing data throught the thingspeak api.
     sensorIDs.forEach((sensorID) => {
         const results = jsonFromServer.results.find(read => read.ID === sensorID)
         if(results !== undefined)
@@ -33,6 +34,10 @@ function processSensorsData(jsonFromServer)
             let calculatedAQI = aqiFromPM(parseFloat(stats['v5']))
             sensorsData.push({
                 ID: sensorID,
+                THINGSPEAK_PRIMARY_Channel_ID : results['THINGSPEAK_PRIMARY_ID'],
+                THINGSPEAK_PRIMARY_API_KEY : results['THINGSPEAK_PRIMARY_ID_READ_KEY'],
+                THINGSPEAK_SECONDARY_Channel_ID : results['THINGSPEAK_SECONDARY_ID'],
+                THINGSPEAK_SECONDARY_API_KEY : results['THINGSPEAK_SECONDARY_ID_READ_KEY'],
                 pm2_5_current: parseFloat(results['pm2_5_atm']),
                 pm2_5_24h_average: stats['v5'],
                 Label: results['Label'],
