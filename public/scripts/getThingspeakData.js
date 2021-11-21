@@ -4,9 +4,10 @@ import { getProcessedSensorData } from "./loadSensorsData.js"
 const start_date = "2021-10-01";
 const end_date = "2021-11-01";
 
-const singleSensorData = []
-const rawSensorData = []
-const thingspeakProcessedData = []
+const test = {};
+const singleSensorData = [];
+const rawSensorData = [];
+const thingspeakProcessedData = [];
 
 async function getSingleSensorData(sensor_ID, channel_id, API_key)
 {
@@ -20,6 +21,9 @@ async function getSingleSensorData(sensor_ID, channel_id, API_key)
                 if(response.status !== 200) {throw new Error(response.message)}
             }
             
+            test[sensor_ID] = response.feeds
+            console.log(test)
+
             singleSensorData.push({
                 ID: sensor_ID,
                 Channel: response.channel,
@@ -42,10 +46,15 @@ async function getSingleSensorData(sensor_ID, channel_id, API_key)
     })
 }
 
-async function getMultipleSensorData(sensor_ID_list, channel_id_list, API_key_list)
-{
+// Input is a list of type:
+// list = [{ID: 12323, channel_id: 121323, API_key: "212313"}, ...]
+// async function getMultipleSensorData(sensor_ID_list, channel_id_list, API_key_list)
+// {
+//     sensor_ID_list.forEach(sensor => {
+//        await getSingleSensorData(sensor.ID, sensor.channel_id, sensor.API_key)
+//     })
 
-}
+// }
 
 function processThinkspeakData(data_to_process)
 {
@@ -89,18 +98,18 @@ function processThinkspeakData(data_to_process)
 }
 
 
-const sensor_ID = 131815
-const channel_id = "1528635"
-const API_key = "H8C9B4OE7X2OHKA6"
+// const sensor_ID = 131815
+// const channel_id = "1528635"
+// const API_key = "H8C9B4OE7X2OHKA6"
 
-async function logData()
-{
-    await getSingleSensorData(sensor_ID, channel_id, API_key)
-    console.log(JSON.stringify(singleSensorData))
-    processThinkspeakData(singleSensorData)
-    const div = document.createElement('div');
-    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(thingspeakProcessedData)}<br /><br />`;
-    $('body').append(div);
-}
+// async function logData()
+// {
+//     await getSingleSensorData(sensor_ID, channel_id, API_key)
+//     console.log(JSON.stringify(singleSensorData))
+//     processThinkspeakData(singleSensorData)
+//     const div = document.createElement('div');
+//     div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(thingspeakProcessedData)}<br /><br />`;
+//     $('body').append(div);
+// }
 
-window.onload = logData;
+// window.onload = logData;
