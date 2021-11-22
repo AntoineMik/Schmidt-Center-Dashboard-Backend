@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 // import sensor list from file
-import { getSensorIDs } from "./public/scripts/listOfSensorsIDs.js";
+import { getSensorIDs } from "./scripts/listOfSensorsIDs.js";
 
 /* Using fetch. Not cmpatible with internet explorer
 More here: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch*/
@@ -22,7 +22,7 @@ const sensorIDs = getSensorIDs(); // [102898, 104786, 2221, 8244, 8248, 102830, 
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('./'));
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
