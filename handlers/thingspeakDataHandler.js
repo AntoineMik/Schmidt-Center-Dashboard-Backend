@@ -142,19 +142,19 @@ export async function getThingspeakRawData(sensor_IDs, start_date, end_date)
 }
 
 // For testing 
-async function logData()
-{
-    const sensor_IDs = [131815, 102898];
-    console.log("testing", sensor_IDs)
-    const start_date = "2021-10-01";
-    const end_date = "2021-11-01";
-    //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
-    const singleSensorData = (await getThingspeakProcessedData(sensor_IDs, start_date, end_date))
-    console.log('Inside load data', singleSensorData);
-    console.log(JSON.stringify(singleSensorData))
-    const div = document.createElement('div');
-    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
-    $('body').append(div);
-}
+// async function logData()
+// {
+//     const sensor_IDs = [131815, 102898];
+//     console.log("testing", sensor_IDs)
+//     const start_date = "2021-10-01";
+//     const end_date = "2021-11-01";
+//     //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
+//     const singleSensorData = (await getThingspeakProcessedData(sensor_IDs, start_date, end_date))
+//     console.log('Inside load data', singleSensorData);
+//     console.log(JSON.stringify(singleSensorData))
+//     const div = document.createElement('div');
+//     div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
+//     $('body').append(div);
+// }
 
-window.onload = logData;
+// window.onload = logData;

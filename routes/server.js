@@ -8,7 +8,8 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 // import sensor list from file
-import { getSensorIDs } from "./scripts/listOfSensorsIDs.js";
+import { getSensorIDs } from "../handlers/listOfSensorsIDs.js";
+//import { getUpdatedSensorsData, getUpdatedschmidtSensorsData } from "./scripts/purpleairDataHandler.js";
 
 /* Using fetch. Not cmpatible with internet explorer
 More here: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch*/
@@ -20,22 +21,22 @@ const port = process.env.PORT || 3000;
 const sensorIDs = getSensorIDs(); // [102898, 104786, 2221, 8244, 8248, 102830, 102890];
 // Sensor: PGCPS_Schmidt_Orme ID 104786 currently offline
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static('./'));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.static('./'));
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-});
+
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   );
+//   next();
+// });
 
 // Get and POST requests
-app
-  .route('/api')
+app.route('/api')
   // GET requests
   .get(async (req, res) => {
     console.log('GET request detected for Sensor Data');
@@ -67,9 +68,19 @@ app
     res.json(json);
   });
 
-app.route('/weather').get(async (req, res) => {
-  console.log('GET request detected for Weather');
-});
+app.route('/schmidtSensorsData')
+  .get (async (req, res) => {
+
+  console.log('GET request detected for Processed Purple Air Data');
+  const data = 123; //await getUpdatedSensorsData();
+  console.log('data from fetch Succeded:', data);
+  res.json(data);
+
+  })
+  .post ( async (req, res) => {
+
+  });
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}!`);

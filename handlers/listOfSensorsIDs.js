@@ -22,7 +22,11 @@ function addSensorByID (ID)
     sensorIDs.push(ID);
 }
 
-export function getSensorIDs()
-{
+// export function getSensorIDs()
+// {
+//     return sensorIDs;
+// }
+
+exports.listSensors = function(){
     return sensorIDs;
 }
