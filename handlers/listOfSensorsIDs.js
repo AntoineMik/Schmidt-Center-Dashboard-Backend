@@ -30,3 +30,7 @@ function addSensorByID (ID)
 exports.listSensors = function(){
     return sensorIDs;
 }
+
+exports.getSensorsIDs = function(){
+    return sensorIDs;
+}

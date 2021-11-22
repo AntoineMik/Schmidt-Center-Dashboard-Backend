@@ -1,5 +1,7 @@
-import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
-import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
+//import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
+//import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
+var purpleairHandler = require('../handlers/purpleairDataHandler')
+var AQICalculator = require('../handlers/AQIcalculator');
 
 /**
  * This function get the data from thingspeak after retreiving the sensor's channel id and API from
@@ -60,7 +62,7 @@ const getMultipleSensorData = async(sensor_IDs, start_date, end_date) =>
     const multipleSensorsData = [];
     try {
         // Retreive updated sensor data from purpleair
-        const purpleairData = await getUpdatedSensorsData();
+        const purpleairData = await purpleairHandler.getUpdatedSensorsData();
         const purpleairSchmidtSensorsData = purpleairData.schmidtSensorsData;
  
         for(let sensor_ID of sensor_IDs) {
@@ -108,10 +110,10 @@ const processThingspeakData = (data_to_process) =>
 
             // Adding AQI values and message to results
             processed.forEach(el => {
-                let calculatedAQI = aqiFromPM(parseFloat(el['PM25ATM']));
+                let calculatedAQI = AQICalculator.aqiFromPM(parseFloat(el['PM25ATM']));
                 el.AQI = calculatedAQI;
-                el.AQIDescription = getAQIDescription(calculatedAQI);
-                el.AQIMessage = getAQIMessage(calculatedAQI);
+                el.AQIDescription = AQICalculator.getAQIDescription(calculatedAQI);
+                el.AQIMessage = AQICalculator.getAQIMessage(calculatedAQI);
             });
 
             // Save processed data to new array
@@ -130,13 +132,13 @@ const processThingspeakData = (data_to_process) =>
 }
 
 // Get the processed data
-export async function getThingspeakProcessedData(sensor_IDs, start_date, end_date)
+exports.getThingspeakProcessedData =  async function(sensor_IDs, start_date, end_date)
 {
     return processThingspeakData((await getMultipleSensorData(sensor_IDs, start_date, end_date)));
 }
 
 // Get the raw data
-export async function getThingspeakRawData(sensor_IDs, start_date, end_date)
+exports.getThingspeakRawData =  async function(sensor_IDs, start_date, end_date)
 {
     return (await getMultipleSensorData(sensor_IDs, start_date, end_date));
 }
