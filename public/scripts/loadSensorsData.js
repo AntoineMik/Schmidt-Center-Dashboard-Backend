@@ -6,6 +6,8 @@ import { getSensorIDs } from "./listOfSensorsIDs.js";
 
 const sensorsData = [];
 var rawdata = {};
+// Using objects to store data allows for test.sensorid.pm2_5
+const test = {}
 
 // Process raw data from server. Here we can decide what entries from the sensors matters
 function processSensorsData(jsonFromServer)
@@ -25,14 +27,20 @@ function processSensorsData(jsonFromServer)
     }
 
     // Process each sensor data to include relevant information
+    // Primary and secondary ID and Channel ID are for accessing data throught the thingspeak api.
     sensorIDs.forEach((sensorID) => {
         const results = jsonFromServer.results.find(read => read.ID === sensorID)
         if(results !== undefined)
         {
             let stats = JSON.parse(results['Stats'])
             let calculatedAQI = aqiFromPM(parseFloat(stats['v5']))
-            sensorsData.push({
-                ID: sensorID,
+
+            // Playing with other type of structure
+            test[sensorID] = {
+                THINGSPEAK_PRIMARY_Channel_ID : results['THINGSPEAK_PRIMARY_ID'],
+                THINGSPEAK_PRIMARY_API_KEY : results['THINGSPEAK_PRIMARY_ID_READ_KEY'],
+                THINGSPEAK_SECONDARY_Channel_ID : results['THINGSPEAK_SECONDARY_ID'],
+                THINGSPEAK_SECONDARY_API_KEY : results['THINGSPEAK_SECONDARY_ID_READ_KEY'],
                 pm2_5_current: parseFloat(results['pm2_5_atm']),
                 pm2_5_24h_average: stats['v5'],
                 Label: results['Label'],
@@ -40,7 +48,23 @@ function processSensorsData(jsonFromServer)
                 Longitude: results['Lon'],
                 AQI: calculatedAQI,
                 AQIDescription: getAQIDescription(calculatedAQI),
-                AQIMessage: getAQIMessage(calculatedAQI) 
+                AQIMessage: getAQIMessage(calculatedAQI)
+            }
+            
+            sensorsData.push({
+                ID: sensorID,
+                THINGSPEAK_PRIMARY_Channel_ID : results['THINGSPEAK_PRIMARY_ID'],
+                THINGSPEAK_PRIMARY_API_KEY : results['THINGSPEAK_PRIMARY_ID_READ_KEY'],
+                THINGSPEAK_SECONDARY_Channel_ID : results['THINGSPEAK_SECONDARY_ID'],
+                THINGSPEAK_SECONDARY_API_KEY : results['THINGSPEAK_SECONDARY_ID_READ_KEY'],
+                pm2_5_current: parseFloat(results['pm2_5_atm']),
+                pm2_5_24h_average: stats['v5'],
+                Label: results['Label'],
+                Latitude: results['Lat'],
+                Longitude: results['Lon'],
+                AQI: calculatedAQI,
+                AQIDescription: getAQIDescription(calculatedAQI),
+                AQIMessage: getAQIMessage(calculatedAQI)
     
             })
         }
@@ -73,7 +97,7 @@ async function loadData()
     });
 }
 
-await loadData();
+// await loadData();
 
 export function getRawSensorsData()
 {
@@ -83,5 +107,6 @@ export function getRawSensorsData()
 export function getProcessedSensorData()
 {
   console.log(sensorsData);
+  console.log(test);
   return sensorsData;
 }

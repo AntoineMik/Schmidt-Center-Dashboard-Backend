@@ -37,3 +37,9 @@ node_modules
 # --------------------
 dummie.js
 scripts/precessSensorsData.js
+scripts/displaySensorsData.js
+scripts/getThingspeakData.js
+scripts/loadSensorsData.js
+scripts/loadThingspeakData.js
+scripts/test.js
+scripts/main-scripts.js
