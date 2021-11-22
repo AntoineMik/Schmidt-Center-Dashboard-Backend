@@ -5,157 +5,83 @@ import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
  * This function get the data from thingspeak after retreiving the sensor's channel id and API from
  * purpleair data.
  * @param {*} sensor_IDs: array of sensor ids to retreive the data for. Could be an array of one value 
+ * @param {*} channel_id: Thingspeak api key for the sensor.
+ * @param {*} channel_id : Thingspeak channel id for the sensor.
  * @param {*} start_date: The start date for which to retreive the data. 
  * @param {*} end_date: The End date for which to retreive the data. 
- * @returns: Returns an array of objects representing the data retreived. 
+ * @returns: Returns a Promise. When resolved contains the data retreived for a single sensor. 
  */
-const getTimeData = async (sensor_IDs, start_date, end_date) => {
 
-    // Retreive updated sensor data from purpleair
-    const purpleairData = await getUpdatedSensorsData();
-    console.log(purpleairData);
-    const purpleairSchmidtSensorsData = purpleairData.schmidtSensorsData;
-    console.log(purpleairSchmidtSensorsData)
-
+const getSingleSensorData = async(sensor_ID, channel_id, API_key, start_date, end_date) =>
+{
     return new Promise((resolve, reject) => {
-
-        try {
-            const thinkspeakSensorsData = {};
-            // Retreive data for each sensor id passed
-            sensor_IDs.forEach(sensor_ID => {
-                // Get sensor data from purpleair
-                let sensorData = purpleairSchmidtSensorsData[sensor_ID];
-                console.log("Inside get time", sensorData);
-                // Get channel id and api key for the sensor
-                let channelID = sensorData.Primary_Channel_ID;
-                let APIKey = sensorData.Primary_KEY;
-                // Modify the url according to the sensor channel id and api key
-                const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${APIKey}&start=${start_date}&end=${end_date}`;
-                console.log(url);
-                // Fetch the data from thingspeak making sure we have a valid response.
-                // Using a promise to ensure we get valid date befor proceding.
-                const promise = new Promise ((resolve, reject) => {
-                    fetch(url).then(res => res.json())
-                    .then( response => {
-                        console.log("inside get time data", response)
-                        // Listen for error code from the response. 
-                        // More on thingpeak errors here: https://uk.mathworks.com/help/thingspeak/error-codes.html
-                        if(response.status) {
-                            if(response.status !== 200) {throw new Error(response.message)}
-                        }
-                        // Return the response when the promise is resolved
-                        resolve({
-                            error: false,
-                            data: response
-                        })
-                    }).catch (err => {
-                        // catch error and return the error message
-                        reject({
-                            error: true,
-                            message: err.message,
-                            data: response
-                        })
-                    })
-    
-                });
-
-                // Promise is fulfiled at this point. Adding value to the array
-                promise.then( (val) => {
-
-                    thinkspeakSensorsData[sensor_ID] = {
-                        channel: val.data.channel,
-                        feeds: val.data.feeds
-                    }
-
-                })
-
-            });
-
-            resolve ({
+        const url = `https://api.thingspeak.com/channels/${channel_id}/feeds.json?api_key=${API_key}&start=${start_date}&end=${end_date}`;
+        console.log(url)
+        fetch(url).then(res => res.json())
+        .then(response => {
+            console.log(response)
+            if(response.status) {
+                if(response.status !== 200) {throw new Error(response.message)}
+            }
+ 
+            const singleSensorData = {
+                ID: sensor_ID,
+                Channel: response.channel,
+                Feeds: response.feeds
+            }
+ 
+            resolve({
                 error: false,
-                value: thinkspeakSensorsData
-            });
-        }
-        catch (err) {
-            reject ({
+                data: singleSensorData
+            })
+ 
+        })
+        .catch(err => {
+            const singleSensorData = {}
+            reject({
                 error: true,
                 message: err.message,
-                //value: thinkspeakSensorsData
+                data: singleSensorData
             })
-        }
-
-    });
-    
-    
-
-    // // Retreive data for each sensor id passed
-    // sensor_IDs.forEach(sensor_ID => {
-    //     // Get sensor data from purpleair
-    //     let sensorData = purpleairSchmidtSensorsData[sensor_ID];
-    //     console.log("Inside get time", sensorData)
-    //     // Check for valid data
-    //     if(sensorData !== undefined)
-    //     {
-    //         // Get channel id and api key for the sensor
-    //         let channelID = sensorData.Primary_Channel_ID;
-    //         let APIKey = sensorData.Primary_KEY;
-    //         // Modify the url according to the sensor channel id and api key
-    //         const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${APIKey}&start=${start_date}&end=${end_date}`;
-    //         console.log(url);
-    //         // Fetch the data from thingspeak making sure we have a valid response.
-    //         // Using a promise to ensure we get valid date befor proceding
-    //         const promise = new Promise ((resolve, reject) => {
-    //             fetch(url).then(res => res.json())
-    //             .then( response => {
-    //                 console.log("inside get time data", response)
-    //                 // Listen for error code from the response. 
-    //                 // More on thingpeak errors here: https://uk.mathworks.com/help/thingspeak/error-codes.html
-    //                 if(response.status) {
-    //                     if(response.status !== 200) {throw new Error(response.message)}
-    //                 }
-    //                 // Return the response when the promise is resolved
-    //                 resolve({
-    //                     error: false,
-    //                     data: response
-    //                 })
-    //             }).catch (err => {
-    //                 // catch error and return the error message
-    //                 reject({
-    //                     error: true,
-    //                     message: err.message,
-    //                     data: response
-    //                 })
-    //             })
-
-    //         })
-
-    //         // Promise is fulfiled at this point. Adding value to the array
-    //         promise.then( (val) => {
-
-    //             // thinkspeakSensorsData.push({
-    //             //     sensor_ID: sensor_ID,
-    //             //     channel: val.data.channel,
-    //             //     feeds: val.data.feeds
-    //             // })
-
-    //             thinkspeakSensorsData[sensor_ID] = {
-    //                 channel: val.data.channel,
-    //                 feeds: val.data.feeds
-    //             }
-
-
-    //         })
-
-    //     }
-    //     else {
-    //         console.log("Invalid sensor ID: ", sensor_ID);
-    //     }
-        
-    // });
-
-    // return thinkspeakSensorsData;
-
+        })
+    })
 }
+
+/**
+ * This function returns thingspeak data for multiple sensors, a start date and an end date
+ * @param {*} sensor_IDs : List of sensors for which to retreive the data
+ * @param {*} start_date : The start date for which to retreive the data. 
+ * @param {*} end_date: The End date for which to retreive the data. 
+ * @returns : A list of object containing the sensors data.
+ */
+ 
+const getMultipleSensorData = async(sensor_IDs, start_date, end_date) =>
+{
+    const multipleSensorsData = [];
+    try {
+        // Retreive updated sensor data from purpleair
+        const purpleairData = await getUpdatedSensorsData();
+        const purpleairSchmidtSensorsData = purpleairData.schmidtSensorsData;
+ 
+        for(let sensor_ID of sensor_IDs) {
+            // Get sensor data from purpleair
+            let sensorData = purpleairSchmidtSensorsData[sensor_ID];
+            // Get channel id and api key for the sensor
+            let channel_id = sensorData.Primary_Channel_ID;
+            let API_key = sensorData.Primary_KEY;
+            let thisSensorData = await getSingleSensorData(sensor_ID, channel_id, API_key, start_date, end_date);
+            multipleSensorsData.push(thisSensorData.data);
+        }
+ 
+    }
+    catch (err){
+        console.log(err.message);
+    }
+ 
+    return multipleSensorsData;
+ 
+}
+
 
 /**
  * This function process the data from thingspeak ensuring proper field name
@@ -165,81 +91,70 @@ const getTimeData = async (sensor_IDs, start_date, end_date) => {
 const processThingspeakData = (data_to_process) =>
 {
     const thingspeakProcessedData = [];
-    console.log("testing 212", (data_to_process));
-    const test = Object.keys(data_to_process);
-    console.log("Keys here", test);
-    data_to_process.forEach(element => {
+    try {
+        for(let element of data_to_process){
+            // Reprocessing the fields to their correct names indicated in the channels of the data
+            const reg = /[^a-zA-Z\d:\u00C0-\u00FF]/g
+            let processed = element.Feeds.map(el => JSON.parse(JSON.stringify(el)
+                .replaceAll("field1", element.Channel.field1.replace(reg,""))
+                .replaceAll("field2", element.Channel.field2.replace(reg,""))
+                .replaceAll("field3", element.Channel.field3.replace(reg,""))
+                .replaceAll("field4", element.Channel.field4.replace(reg,""))
+                .replaceAll("field5", element.Channel.field5.replace(reg,""))
+                .replaceAll("field6", element.Channel.field6.replace(reg,""))
+                .replaceAll("field7", element.Channel.field7.replace(reg,""))
+                .replaceAll("field8", element.Channel.field8.replace(reg,""))
+            ))
 
-         console.log("testing 3", element);
-        // Reprocessing the fields to their correct names indicated in the channels of the data
-        const reg = /[^a-zA-Z\d:\u00C0-\u00FF]/g
-        let processed = element.Feeds.map(el => JSON.parse(JSON.stringify(el)
-            .replaceAll("field1", element.Channel.field1.replace(reg,""))
-            .replaceAll("field2", element.Channel.field2.replace(reg,""))
-            .replaceAll("field3", element.Channel.field3.replace(reg,""))
-            .replaceAll("field4", element.Channel.field4.replace(reg,""))
-            .replaceAll("field5", element.Channel.field5.replace(reg,""))
-            .replaceAll("field6", element.Channel.field6.replace(reg,""))
-            .replaceAll("field7", element.Channel.field7.replace(reg,""))
-            .replaceAll("field8", element.Channel.field8.replace(reg,""))
-        ))
+            // Adding AQI values and message to results
+            processed.forEach(el => {
+                let calculatedAQI = aqiFromPM(parseFloat(el['PM25ATM']));
+                el.AQI = calculatedAQI;
+                el.AQIDescription = getAQIDescription(calculatedAQI);
+                el.AQIMessage = getAQIMessage(calculatedAQI);
+            });
 
-        // Adding AQI values and message to results
-        processed.forEach(el => {
-            let calculatedAQI = aqiFromPM(parseFloat(el['PM25ATM']));
-            el.AQI = calculatedAQI;
-            el.AQIDescription = getAQIDescription(calculatedAQI);
-            el.AQIMessage = getAQIMessage(calculatedAQI);
-        });
-
-        console.log("Inside processed think data", element.Feeds);
-        console.log(processed[0].PM10ATM);
-
-        // Save processed data to new array
-        thingspeakProcessedData.push({
-            sensor_ID: element.sensor_ID,
-            channel: element.channel,
-            feeds: processed
-        });
+            // Save processed data to new array
+            thingspeakProcessedData.push({
+                sensor_ID: element.sensor_ID,
+                channel: element.channel,
+                feeds: processed
+            });
         
-    });
+        }
+    }
+    catch (err) {
+        console.log(err.message);
+    }
     return thingspeakProcessedData;
-
 }
 
 // Get the processed data
 export async function getThingspeakProcessedData(sensor_IDs, start_date, end_date)
 {
-    return processThingspeakData((await getTimeData(sensor_IDs, start_date, end_date)));
+    return processThingspeakData((await getMultipleSensorData(sensor_IDs, start_date, end_date)));
 }
 
 // Get the raw data
 export async function getThingspeakRawData(sensor_IDs, start_date, end_date)
 {
-    try {
-        const shmidthSensorsData = await getTimeData(sensor_IDs, start_date, end_date);
-        return shmidthSensorsData;
-
-    } catch (err) {
-        console.log(err)
-    }
-    
+    return (await getMultipleSensorData(sensor_IDs, start_date, end_date));
 }
 
 // For testing 
-// async function logData()
-// {
-//     const sensor_IDs = [131815, 102898];
-//     console.log("testing", sensor_IDs)
-//     const start_date = "2021-10-01";
-//     const end_date = "2021-11-01";
-//     //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
-//     const singleSensorData = (await getTimeData(sensor_IDs, start_date, end_date))
-//     console.log('Inside load data', singleSensorData.value);
-//     console.log(JSON.stringify(singleSensorData))
-//     const div = document.createElement('div');
-//     div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
-//     $('body').append(div);
-// }
+async function logData()
+{
+    const sensor_IDs = [131815, 102898];
+    console.log("testing", sensor_IDs)
+    const start_date = "2021-10-01";
+    const end_date = "2021-11-01";
+    //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
+    const singleSensorData = (await getThingspeakProcessedData(sensor_IDs, start_date, end_date))
+    console.log('Inside load data', singleSensorData);
+    console.log(JSON.stringify(singleSensorData))
+    const div = document.createElement('div');
+    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
+    $('body').append(div);
+}
 
-// window.onload = logData;
+window.onload = logData;

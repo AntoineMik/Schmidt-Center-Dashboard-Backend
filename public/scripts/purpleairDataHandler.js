@@ -1,6 +1,10 @@
 import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
 import { getSensorIDs } from "./listOfSensorsIDs.js";
 
+/**
+ * 
+ * @returns A promise. When Resolve contains the data, when Rejected contains data until rejection
+ */
 const rawData = async () => {
     return new Promise((resolve, reject) => {
         fetch('/api', {
@@ -39,11 +43,9 @@ The stats variable from the Json result holds all the
 sensors measurements */
 const processedData = (inputData, sensor_IDs) => {
 
-    //console.log("Inside processed data", inputData)
     const processedData = {};
     sensor_IDs.forEach(sensor_ID => {
         let results = inputData.results.find(read => read.ID === sensor_ID)
-        //console.log("Checking results", results)
         if(results !== undefined) {
             let stats = JSON.parse(results['Stats']);
             let calculatedAQI = aqiFromPM(parseFloat(stats['v5']));
@@ -94,7 +96,6 @@ const updateSensorData = async () => {
 
     try {
         const serverJson = await rawData();
-        //console.log(serverJson);
         const sensorData = serverJson.data;
         console.log("inside updater", sensorData)
         allSensorsData = processedData(sensorData, allSensors);
@@ -122,7 +123,6 @@ const updateSensorData = async () => {
     }
 
     return recentSensorData;
-
 }
 
 export async function getUpdatedSensorsData()
