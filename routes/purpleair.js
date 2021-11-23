@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const fetch = require('node-fetch');
+
 // import sensor list from file
 var sensors = require('../handlers/listOfSensorsIDs')
 
@@ -18,7 +20,7 @@ const formattedSensorIds = sensorIDs.reduce(
 );
 
 /* GET home page. */
-router.get('/purpleair', async function(req, res) {
+router.get('/', async function(req, res) {
     console.log('GET request detected for purple air sensors Data');
 
     const data = await fetch(
@@ -27,7 +29,7 @@ router.get('/purpleair', async function(req, res) {
     // Parse as Json
     const json = await data.json();
     console.log('data from fetch Succeded:', json);
-    res.json(json);
+    res.status(200).json(json);
 });
 
 module.exports = router;

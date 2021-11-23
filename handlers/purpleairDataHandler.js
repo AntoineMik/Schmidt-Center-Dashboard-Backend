@@ -1,16 +1,34 @@
 //import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
 //import { getSensorIDs } from "./listOfSensorsIDs.js";
+var fetch = require('node-fetch');
 
 var AQICalculator = require('../handlers/AQIcalculator');
 var sensorsList = require('../handlers/listOfSensorsIDs');
+// import sensor list from file
+var sensors = require('../handlers/listOfSensorsIDs')
 
 /**
  * 
  * @returns A promise. When Resolve contains the data, when Rejected contains data until rejection
  */
 const rawData = async () => {
+
     return new Promise((resolve, reject) => {
-        fetch('/api', {
+
+        // Lists of sensors IDs
+        const sensorIDs = sensors.getSensorsIDs();
+
+        // Format the sensor list to match purple air call for multiple entries.
+        // More info here: https://docs.google.com/document/d/15ijz94dXJ-YAZLi9iZ_RaBwrZ4KtYeCy08goGBwnbCU/edit
+        const formattedSensorIds = sensorIDs.reduce(
+            (finalString, currentValue, index, source) => {
+            return index < source.length
+                ? finalString + '|' + currentValue.toString()
+                : finalString + currentValue;
+            }
+        );
+
+        fetch(`https://www.purpleair.com/json?show=${formattedSensorIds}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'

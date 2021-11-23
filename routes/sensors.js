@@ -14,13 +14,13 @@ router.get('/sensors', sensors_controller.listSensors);
 router.get('/', async function (req, res) {
     const data = await sensors_controller.listSensors();
     //res.render('sensor_list', { title: 'Sensors List', sensors_list: data });
-    res.status(200).json({text: "Hello", data: data});
+    res.status(200).json(data);
     console.log(data);
 })
 
 // About page route.
 router.get('/list', function (req, res) {
-  res.send('list of the sensors');
+  res.status(200).json(data);
 })
 
 module.exports = router;

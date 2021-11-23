@@ -1,5 +1,6 @@
 //import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
 //import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
+var fetch = require('node-fetch');
 var purpleairHandler = require('../handlers/purpleairDataHandler')
 var AQICalculator = require('../handlers/AQIcalculator');
 
@@ -21,7 +22,7 @@ const getSingleSensorData = async(sensor_ID, channel_id, API_key, start_date, en
         console.log(url)
         fetch(url).then(res => res.json())
         .then(response => {
-            console.log(response)
+            //console.log(response)
             if(response.status) {
                 if(response.status !== 200) {throw new Error(response.message)}
             }
@@ -118,8 +119,8 @@ const processThingspeakData = (data_to_process) =>
 
             // Save processed data to new array
             thingspeakProcessedData.push({
-                sensor_ID: element.sensor_ID,
-                channel: element.channel,
+                sensor_ID: element.ID,
+                channel: element.Channel,
                 feeds: processed
             });
         
