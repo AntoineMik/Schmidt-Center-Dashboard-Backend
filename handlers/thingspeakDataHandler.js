@@ -1,5 +1,8 @@
-import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
-import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
+//import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
+//import { getUpdatedSensorsData } from "./purpleairDataHandler.js";
+var fetch = require('node-fetch');
+var purpleairHandler = require('../handlers/purpleairDataHandler')
+var AQICalculator = require('../handlers/AQIcalculator');
 
 /**
  * This function get the data from thingspeak after retreiving the sensor's channel id and API from
@@ -19,7 +22,7 @@ const getSingleSensorData = async(sensor_ID, channel_id, API_key, start_date, en
         console.log(url)
         fetch(url).then(res => res.json())
         .then(response => {
-            console.log(response)
+            //console.log(response)
             if(response.status) {
                 if(response.status !== 200) {throw new Error(response.message)}
             }
@@ -60,7 +63,7 @@ const getMultipleSensorData = async(sensor_IDs, start_date, end_date) =>
     const multipleSensorsData = [];
     try {
         // Retreive updated sensor data from purpleair
-        const purpleairData = await getUpdatedSensorsData();
+        const purpleairData = await purpleairHandler.getUpdatedSensorsData();
         const purpleairSchmidtSensorsData = purpleairData.schmidtSensorsData;
  
         for(let sensor_ID of sensor_IDs) {
@@ -108,16 +111,16 @@ const processThingspeakData = (data_to_process) =>
 
             // Adding AQI values and message to results
             processed.forEach(el => {
-                let calculatedAQI = aqiFromPM(parseFloat(el['PM25ATM']));
+                let calculatedAQI = AQICalculator.aqiFromPM(parseFloat(el['PM25ATM']));
                 el.AQI = calculatedAQI;
-                el.AQIDescription = getAQIDescription(calculatedAQI);
-                el.AQIMessage = getAQIMessage(calculatedAQI);
+                el.AQIDescription = AQICalculator.getAQIDescription(calculatedAQI);
+                el.AQIMessage = AQICalculator.getAQIMessage(calculatedAQI);
             });
 
             // Save processed data to new array
             thingspeakProcessedData.push({
-                sensor_ID: element.sensor_ID,
-                channel: element.channel,
+                sensor_ID: element.ID,
+                channel: element.Channel,
                 feeds: processed
             });
         
@@ -130,31 +133,31 @@ const processThingspeakData = (data_to_process) =>
 }
 
 // Get the processed data
-export async function getThingspeakProcessedData(sensor_IDs, start_date, end_date)
+exports.getThingspeakProcessedData =  async function(sensor_IDs, start_date, end_date)
 {
     return processThingspeakData((await getMultipleSensorData(sensor_IDs, start_date, end_date)));
 }
 
 // Get the raw data
-export async function getThingspeakRawData(sensor_IDs, start_date, end_date)
+exports.getThingspeakRawData =  async function(sensor_IDs, start_date, end_date)
 {
     return (await getMultipleSensorData(sensor_IDs, start_date, end_date));
 }
 
 // For testing 
-async function logData()
-{
-    const sensor_IDs = [131815, 102898];
-    console.log("testing", sensor_IDs)
-    const start_date = "2021-10-01";
-    const end_date = "2021-11-01";
-    //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
-    const singleSensorData = (await getThingspeakProcessedData(sensor_IDs, start_date, end_date))
-    console.log('Inside load data', singleSensorData);
-    console.log(JSON.stringify(singleSensorData))
-    const div = document.createElement('div');
-    div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
-    $('body').append(div);
-}
+// async function logData()
+// {
+//     const sensor_IDs = [131815, 102898];
+//     console.log("testing", sensor_IDs)
+//     const start_date = "2021-10-01";
+//     const end_date = "2021-11-01";
+//     //const singleSensorData = (await getThingspeakRawData(sensor_IDs, start_date, end_date))
+//     const singleSensorData = (await getThingspeakProcessedData(sensor_IDs, start_date, end_date))
+//     console.log('Inside load data', singleSensorData);
+//     console.log(JSON.stringify(singleSensorData))
+//     const div = document.createElement('div');
+//     div.innerHTML = `<h2>What we have</h2> <br />${JSON.stringify(singleSensorData)}<br /><br />`;
+//     $('body').append(div);
+// }
 
-window.onload = logData;
+// window.onload = logData;

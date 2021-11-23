@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #[em LocalLibrary], a very basic API to get and process sensors data from purpleair.com and thingspeak.com.
+
+  h1 Dynamic contents
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The API has the following records:
+
+    ul
+      li #[strong Total Number Of Sensors:] !{data.length}
+      li #[strong Total Number Of Active Sensors:] !{data.length}
+      li #[strong List Of The Sensors:] !{data}
+

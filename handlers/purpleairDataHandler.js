@@ -1,13 +1,34 @@
-import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
-import { getSensorIDs } from "./listOfSensorsIDs.js";
+//import { aqiFromPM, getAQIDescription, getAQIMessage } from "./AQIcalculator.js";
+//import { getSensorIDs } from "./listOfSensorsIDs.js";
+var fetch = require('node-fetch');
+
+var AQICalculator = require('../handlers/AQIcalculator');
+var sensorsList = require('../handlers/listOfSensorsIDs');
+// import sensor list from file
+var sensors = require('../handlers/listOfSensorsIDs')
 
 /**
  * 
  * @returns A promise. When Resolve contains the data, when Rejected contains data until rejection
  */
 const rawData = async () => {
+
     return new Promise((resolve, reject) => {
-        fetch('/api', {
+
+        // Lists of sensors IDs
+        const sensorIDs = sensors.getSensorsIDs();
+
+        // Format the sensor list to match purple air call for multiple entries.
+        // More info here: https://docs.google.com/document/d/15ijz94dXJ-YAZLi9iZ_RaBwrZ4KtYeCy08goGBwnbCU/edit
+        const formattedSensorIds = sensorIDs.reduce(
+            (finalString, currentValue, index, source) => {
+            return index < source.length
+                ? finalString + '|' + currentValue.toString()
+                : finalString + currentValue;
+            }
+        );
+
+        fetch(`https://www.purpleair.com/json?show=${formattedSensorIds}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -48,7 +69,7 @@ const processedData = (inputData, sensor_IDs) => {
         let results = inputData.results.find(read => read.ID === sensor_ID)
         if(results !== undefined) {
             let stats = JSON.parse(results['Stats']);
-            let calculatedAQI = aqiFromPM(parseFloat(stats['v5']));
+            let calculatedAQI = AQICalculator.aqiFromPM(parseFloat(stats['v5']));
 
             processedData[sensor_ID] = {
                 Primary_Channel_ID : results['THINGSPEAK_PRIMARY_ID'],
@@ -61,8 +82,8 @@ const processedData = (inputData, sensor_IDs) => {
                 Latitude: results['Lat'],
                 Longitude: results['Lon'],
                 AQI: calculatedAQI,
-                AQIDescription: getAQIDescription(calculatedAQI),
-                AQIMessage: getAQIMessage(calculatedAQI)
+                AQIDescription: AQICalculator.getAQIDescription(calculatedAQI),
+                AQIMessage: AQICalculator.getAQIMessage(calculatedAQI)
             }
         }
         else {
@@ -85,7 +106,7 @@ const updateSensorData = async () => {
     const ruralTierSensors = [] //getRuralTiersSensors();
     const innerBeltwaySensors = [] //getInnerBeltwaySensors();
     const southCountySensors = [] //getSouthCountySensors();
-    const allSensors = getSensorIDs();
+    const allSensors = sensorsList.getSensorsIDs();
 
     let allSensorsData = {};
     let northSensorsData = {};
@@ -125,37 +146,37 @@ const updateSensorData = async () => {
     return recentSensorData;
 }
 
-export async function getUpdatedSensorsData()
+exports.getUpdatedSensorsData = async function()
 {
     return (await updateSensorData());
 }
 
-export async function getUpdatedschmidtSensorsData()
+exports.getUpdatedschmidtSensorsData = async function()
 {
     return (await updateSensorData()).schmidtSensorsData;
 }
 
-export async function getUpdatedNorthCountySensorsData()
+exports.getUpdatedNorthCountySensorsData =  async function()
 {
     return (await updateSensorData()).northCountySensorsData;
 }
 
-export async function getUpdatedCentralCountySensorsData()
+exports.getUpdatedCentralCountySensorsData =  async function()
 {
     return (await updateSensorData()).centralCountySensorsData;
 }
 
-export async function getUpdatedRuralTierSensorsData()
+exports.getUpdatedRuralTierSensorsData =  async function()
 {
     return (await updateSensorData()).ruralTierSensorsData;
 }
 
-export async function getUpdatedInnerBeltwaySensorsData()
+exports.getUpdatedInnerBeltwaySensorsData =  async function()
 {
     return (await updateSensorData()).innerBeltwaySensorsData;
 }
 
-export async function getUpdatedsouthCountySensorsData()
+exports.getUpdatedsouthCountySensorsData =  async function()
 {
     return (await updateSensorData()).southCountySensorsData;
 }
