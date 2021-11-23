@@ -37,7 +37,11 @@ let a_middleware_function = async function(req, res, next) {
 
 
 /* GET processed data for all sensors and PG areas. */
-router.get('/:sensorsIDs/:start/:end', a_middleware_function)
+router.get('/:sensorsIDs/:start/:end', a_middleware_function);
+
+router.get('/', function (req, res) {
+    res.render('thingspeak');
+})
 
 // async function (req, res) {
 

@@ -1,0 +1,17 @@
+//extends layout
+
+block content
+  h1= title
+  p The format to get thingspeak data for one or more sensor is as follow:
+  h1 Query Format:
+
+  if error
+    p Error getting dynamic content.
+  else
+    p /thingspeak/sensor ids/start date/end date:
+
+    ul
+      li #[strong sensor ids:] comma separated id of the sensors
+      li #[strong start date: ] The start date of interest.
+      li #[strong end date:] The end data of interest.
+
