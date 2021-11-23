@@ -1,24 +1,25 @@
 // These are our required libraries to make the server work.
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-import express from 'express';
-import dotenv from 'dotenv';
-import fetch from 'node-fetch';
+// import express from 'express';
+// import dotenv from 'dotenv';
+// import fetch from 'node-fetch';
 
-dotenv.config();
+// dotenv.config();
 
 // import sensor list from file
-import { getSensorIDs } from "../handlers/listOfSensorsIDs.js";
+var sensors = require('../handlers/listOfSensorsIDs')
+//import { getSensorIDs } from "../handlers/listOfSensorsIDs.js";
 //import { getUpdatedSensorsData, getUpdatedschmidtSensorsData } from "./scripts/purpleairDataHandler.js";
 
 /* Using fetch. Not cmpatible with internet explorer
 More here: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch*/
 
-const app = express();
-const port = process.env.PORT || 3000;
+// const app = express();
+// const port = process.env.PORT || 3000;
 
 // Lists of sensors IDs
-const sensorIDs = getSensorIDs(); // [102898, 104786, 2221, 8244, 8248, 102830, 102890];
+const sensorIDs = sensors.getSensorIDs(); // [102898, 104786, 2221, 8244, 8248, 102830, 102890];
 // Sensor: PGCPS_Schmidt_Orme ID 104786 currently offline
 
 // app.use(express.urlencoded({ extended: true }));
@@ -66,19 +67,6 @@ app.route('/api')
     const json = await data.json();
     console.log('data from fetch', json);
     res.json(json);
-  });
-
-app.route('/schmidtSensorsData')
-  .get (async (req, res) => {
-
-  console.log('GET request detected for Processed Purple Air Data');
-  const data = 123; //await getUpdatedSensorsData();
-  console.log('data from fetch Succeded:', data);
-  res.json(data);
-
-  })
-  .post ( async (req, res) => {
-
   });
 
 
