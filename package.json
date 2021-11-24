@@ -9,8 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
-    "build": "cross-env NODE_ENV=production webpack"
+    "serverstart": "DEBUG=schmidt-center-dashboard:* npm run devstart",
+    "build": "cross-env NODE_ENV=production npm run devstart"
   },
   "repository": {
     "type": "git",
