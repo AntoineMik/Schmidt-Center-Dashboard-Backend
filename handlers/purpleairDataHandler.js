@@ -101,11 +101,11 @@ const processedData = (inputData, sensor_IDs) => {
  */
 const updateSensorData = async () => {
 
-    const northCountySensors = [] //getNorthCountySensors();
-    const CentralCounty = [] //getCentralCountySensors();
-    const ruralTierSensors = [] //getRuralTiersSensors();
-    const innerBeltwaySensors = [] //getInnerBeltwaySensors();
-    const southCountySensors = [] //getSouthCountySensors();
+    const northCountySensors = sensorsList.getNorthCountySensorsIds(); //getNorthCountySensors();
+    const CentralCounty = sensorsList.getCentralCountySensorsIds(); //getCentralCountySensors();
+    const ruralTierSensors = sensorsList.getRuralTierSensorsIds(); //getRuralTiersSensors();
+    const innerBeltwaySensors = sensorsList.getInnerBeltwaySensorsIds(); //getInnerBeltwaySensors();
+    const southCountySensors = sensorsList.getSouthCountySensorsIds(); //getSouthCountySensors();
     const allSensors = sensorsList.getSensorsIDs();
 
     let allSensorsData = {};
