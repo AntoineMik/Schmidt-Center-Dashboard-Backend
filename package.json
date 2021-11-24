@@ -5,12 +5,13 @@
     "node": "17.0.1"
   },
   "description": "",
+  "main": "routes/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=schmidt-center-dashboard:* npm run devstart",
-    "build": "node app.js"
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,8 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "dataframe-js": "^1.4.4",
-    "eslint": "^8.3.0"
+    "eslint": "^8.3.0",
+    "webpack": "^5.64.3",
+    "webpack-cli": "^4.9.1"
   }
 }

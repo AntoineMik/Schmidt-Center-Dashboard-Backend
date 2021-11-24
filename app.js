@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var compression = require('compression');
 var helmet = require('helmet');
+var webpack = require('webpack');
+var cross_env = require('cross-env');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -26,6 +28,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression()); //Compress all routes
 app.use(helmet());
+app.use(webpack());
+app.use(cross_env());
+
+
 app.use(express.static(path.join(__dirname, 'routes')));
 
 app.use('/', indexRouter);
