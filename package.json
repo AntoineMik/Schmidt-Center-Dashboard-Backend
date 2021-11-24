@@ -10,7 +10,7 @@
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=schmidt-center-dashboard:* npm run devstart",
-    "build": "cross-env NODE_ENV=production npm run devstart"
+    "build": "cross-env NODE_ENV=production npm run start"
   },
   "repository": {
     "type": "git",
