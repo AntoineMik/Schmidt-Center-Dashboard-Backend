@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart"
+    "serverstart": "DEBUG=express-locallibrary-tutorial:* npm run devstart",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "dataframe-js": "^1.4.4",
     "eslint": "^8.3.0"
   }
