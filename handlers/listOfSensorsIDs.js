@@ -16,6 +16,7 @@ const sensorIDs = [
     54259   // CheverlyAQM_W2_3 (outside)
 ];
 
+// North county: 39.019989, -76.879418
 const northCounty = [
     102898, // PGCPS_Schmidt_CenterBldg (outside) ID 102898
     104786, // PGCPS_Schmidt_Orme (outside) ID 104786 currently offline
@@ -24,6 +25,7 @@ const northCounty = [
     131815 // Riverdale Park (outside)
 ];
 
+// Inner Beltway: 38.859444,-76.889167
 const innerBeltsway = [
     114799, // Cheverly (outside)
     57841,  // CheverlyAQM_W3_1 (outside)
@@ -34,10 +36,13 @@ const innerBeltsway = [
     54259   // CheverlyAQM_W2_3 (outside)
 ];
 
+// Central County: 38.8275,-76.751111
 const centralCounty = [];
 
+// Rural Tier: 38.698611,-76.849167
 const ruralTier = [];
 
+// South County: 38.810556,-76.946389
 const southCounty = [];
 
 exports.addSensorByID = function (ID)
