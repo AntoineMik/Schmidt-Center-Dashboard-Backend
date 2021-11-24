@@ -5,7 +5,8 @@ This project creates an API to interface with the Schmidt center Dashboard. It a
 <pre>
 <b>Backend Routes
 
-/sensors: An Array List of all available sensors. Each element in the array is an INTEGER representing a sensor ID.
+/sensors: An Array List of all available sensors. 
+Each element in the array is an INTEGER representing a sensor ID.
 /purpleair: Returns the raw sensors data from Purpleair of the available sensors.
 /processed: Returns an object containing the following:
  timestamp: Current timestamp
@@ -41,15 +42,18 @@ processedData[sensor_ID] = {
 /processed/south: Returns only PG South County processed sensors data.
 
 /thingspeak/sensor-ids/start-date/end-date: 
-Returns thingspeak processed data for the list or the individual sensor id for the specified start and end date.
-Sensor-ids: A comma-separated sensors ids or a single sensor id. (ex: 131815, or 131815,102898,114799 ). 
+Returns thingspeak processed data for the list or the individual sensor id for 
+the specified start and end date.
+Sensor-ids: A comma-separated sensors ids or a single sensor id. 
+(ex: 131815, or 131815,102898,114799 ). 
 The sensors id passed need to be valid or an empty object will be returned.
 Start-date: The start date of interest. The format is as follows: 2021-12-01
 End-date: The end date of interest. The format is as follows: 2021-12-02
 <strong>One or more invalid parameters will cause a 500 error with an error message.</strong>
 
 Other Routes:
-/thingspeak: Gives a description of the appropriate format to follow for thingspeak processed data query.
+/thingspeak: Gives a description of the appropriate format to follow for 
+thingspeak processed data query.
 </pre>
 
 
