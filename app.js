@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var compression = require('compression');
 var helmet = require('helmet');
+const bodyParser = require("body-parser")
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -35,6 +36,10 @@ app.use('/sensors', sensors);
 app.use('/purpleair', purpleair);
 app.use('/processed', processed);
 app.use('/thingspeak', thingspeak);
+
+app.use(bodyParser.urlencoded({
+  extended:true
+}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

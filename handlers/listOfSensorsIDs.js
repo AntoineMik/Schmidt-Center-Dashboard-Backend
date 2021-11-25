@@ -1,6 +1,6 @@
 
 // List of the sensors
-const sensorIDs = [
+let sensorIDs = [
 
     102898, // PGCPS_Schmidt_CenterBldg (outside) ID 102898
     104786, // PGCPS_Schmidt_Orme (outside) ID 104786 currently offline
@@ -12,8 +12,8 @@ const sensorIDs = [
     52833,  // CheverlyAQM_W1_2 (outside)
     53677,  // CheverlyAQM_W1_1 (outside)
     53663,  // CheverlyAQM_W1_3 (outside)
-    53775,  // CheverlyAQM_W2_2 (outside)
-    54259   // CheverlyAQM_W2_3 (outside)
+    53775  // CheverlyAQM_W2_2 (outside)
+    //54259   // CheverlyAQM_W2_3 (outside)
 ];
 
 // North county: 39.019989, -76.879418
@@ -47,32 +47,34 @@ const southCounty = [];
 
 exports.addSensorByID = function (ID)
 {
-    sensorIDs.push(ID);
+    console.log("Sensor id to add", ID);
+    sensorIDs.push.apply(ID);
+    console.log("New list", sensorIDs)
 }
 
 exports.addNorthCountySensorByID = function (ID)
 {
-    northCounty.push(ID);
+    northCounty.push.apply(ID);
 }
 
 exports.addInnerBeltswaySensorByID = function (ID)
 {
-    innerBeltsway.push(ID);
+    innerBeltsway.push.apply(ID);
 }
 
 exports.addCentralCountySensorByID = function (ID)
 {
-    centralCounty.push(ID);
+    centralCounty.push.apply(ID);
 }
 
 exports.addRuralTierSensorByID = function (ID)
 {
-    ruralTier.push(ID);
+    ruralTier.push.apply(ID);
 }
 
 exports.addSouthCountySensorByID = function (ID)
 {
-    southCounty.push(ID);
+    southCounty.push.apply(ID);
 }
 
 
