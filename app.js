@@ -19,7 +19,7 @@ var thingspeak = require('./routes/thingspeak');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
@@ -32,7 +32,7 @@ app.use(helmet());
 //app.use(cross_env());
 
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, './public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
