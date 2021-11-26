@@ -32,7 +32,7 @@ app.use(helmet());
 //app.use(cross_env());
 
 
-//app.use(express.static(path.join(__dirname, 'routes')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
